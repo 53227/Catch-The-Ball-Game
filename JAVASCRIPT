@@ -1,0 +1,41 @@
+const startBtn = document.getElementById('start-btn');
+const gameArea = document.getElementById('game-area');
+const scoreDisplay = document.getElementById('score');
+let score = 0;
+let interval;
+
+function getRandomPosition() {
+  const ballSize = Math.min(gameArea.clientWidth, gameArea.clientHeight) * 0.08;
+  const x = Math.random() * (gameArea.clientWidth - ballSize);
+  const y = Math.random() * (gameArea.clientHeight - ballSize);
+  return { x, y, size: ballSize };
+}
+
+function createBall() {
+  const ball = document.createElement('div');
+  ball.classList.add('ball');
+  const { x, y } = getRandomPosition();
+  ball.style.left = `${x}px`;
+  ball.style.top = `${y}px`;
+  ball.addEventListener('click', () => {
+    score++;
+    scoreDisplay.textContent = `Score: ${score}`;
+    ball.remove();
+  });
+  gameArea.appendChild(ball);
+  setTimeout(() => ball.remove(), 2000);
+}
+
+function startGame() {
+  score = 0;
+  scoreDisplay.textContent = `Score: ${score}`;
+  gameArea.innerHTML = '';
+  clearInterval(interval);
+  interval = setInterval(createBall, 800);
+  setTimeout(() => {
+    clearInterval(interval);
+    alert(`Time's up! Your final score is ${score}`);
+  }, 30000);
+}
+
+startBtn.addEventListener('click', startGame);
